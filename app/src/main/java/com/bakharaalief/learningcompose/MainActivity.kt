@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,10 +24,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-
-data class Idol(val photo : Int, val title : String, val contentDesc : String)
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -45,33 +52,61 @@ class MainActivity : ComponentActivity() {
                     TopAppBar( backgroundColor = Color.White, title = { Text(text = "Dahyun List")})
                 }
             ) {
-                //create list
-                ListImage(datas = listIdol)
+                //use navigation
+                Navigation(listIdol)
             }
         }
     }
 }
 
 @Composable
-fun ListImage(datas : List<Idol>){
-    LazyColumn{
-        items(items = datas){ data ->
-            ImageCard(painter = painterResource(id = data.photo), title = data.title, contentDescription = data.contentDesc)
+fun Navigation(data : List<Idol>){
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "Home_Screen"){
+
+        //home screen
+        composable(route = "Home_Screen"){
+            HomeScreen(datas = data, navController)
+        }
+
+        //detail screen
+        composable(
+            route = "Detail_Screen"
+        ){
+            DetailScreen()
         }
     }
 }
 
+@Composable
+fun HomeScreen(datas : List<Idol>, navController: NavController){
+    LazyColumn{
+        items(items = datas){ data ->
+            ImageCard(
+                painter = painterResource(id = data.photo),
+                title = data.title,
+                contentDescription = data.contentDesc,
+                navController = navController
+            )
+        }
+    }
+}
 
 @Composable
 fun ImageCard(
     painter : Painter,
     title : String,
-    contentDescription : String
+    contentDescription : String,
+    navController: NavController
 ){
     Card(
-        modifier = Modifier.padding(10.dp),
+        modifier = Modifier
+            .padding(10.dp)
+            .clickable {
+                navController.navigate("Detail_Screen")
+            },
         shape = RoundedCornerShape(10.dp),
-        elevation = 10.dp
+        elevation = 10.dp,
     ){
         //box stack 1
         Box(
@@ -112,5 +147,35 @@ fun ImageCard(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun DetailScreen(){
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        //idol image
+        Image(
+            painter = painterResource(id = R.drawable.dahyun),
+            contentDescription = "aaaaaa",
+            contentScale = ContentScale.Crop
+        )
+
+        //idol name
+        Text(
+            modifier = Modifier.padding(10.dp),
+            text = "Dahyun",
+            fontWeight = FontWeight.Bold,
+            fontSize = 25.sp
+        )
+
+        //idol desc
+        Text(
+            modifier = Modifier.padding(horizontal = 10.dp),
+            text = "Lorem Ipsum Bla Bla Bla",
+            fontSize = 20.sp
+        )
     }
 }
