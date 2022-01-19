@@ -1,3 +1,80 @@
 <resources>
     <string name="app_name">LearningCompose</string>
+    <string name="idol_content">Lorem Ipsum is simply dummy text of the printing and typesetting industry
+        Lorem Ipsum has been the industrys standard dummy text ever since the 1500s
+        when an unknown printer took a galley of type and scrambled it to make a type specimen book
+        It has survived not only five centuries, but also the leap into electronic typesetting
+        remaining essentially unchanged It was popularised in the 1960s with the release of Letraset
+        sheets containing Lorem Ipsum passages, and more recently with desktop publishing
+        software like Aldus PageMaker including versions of Lorem Ipsum.
+    </string>
+
+    <!--    link photo -->
+    <string-array name="link_photo">
+        <item>https://kprofiles.com/wp-content/uploads/2016/05/15e96d3410613ab50f774d499709e0b67203a62888dd73b5d187c1160fd1a9ec-571x800.jpg</item>
+        <item>https://kprofiles.com/wp-content/uploads/2016/05/1e9a3ec66f4a3f4b9319f19dca5a17f577efee5b242fa91ef7b9e07f86701077-571x800.jpg</item>
+        <item>https://kprofiles.com/wp-content/uploads/2016/05/837d4c5f105c3e4654a28f8c2e918a0d5c51f74fac42788c344e4d590e4eac6e-571x800.jpg</item>
+        <item>https://kprofiles.com/wp-content/uploads/2016/05/d21b133b8d8ee89207a3ce4531c4c2a0881e247d9d63236468a6f90fb153a2cd-571x800.jpg</item>
+        <item>https://kprofiles.com/wp-content/uploads/2016/05/d90f9e3ce9f1286e4b0dc931e993817f6d5de93fbd87aca549edf909d7e5bb93-571x800.jpg</item>
+        <item>https://kprofiles.com/wp-content/uploads/2016/05/f17682595ec85239bbff67b22d3340b656052deee2ecf3c1860744189fd8b4bf-571x800.jpg</item>
+        <item>https://kprofiles.com/wp-content/uploads/2016/05/e48d6b0c0d24ae5c90cd3105363545c50cc72e96fd827db751fde8b5043fc3a4-571x800.jpg</item>
+        <item>https://kprofiles.com/wp-content/uploads/2016/05/d68b6f27943dd372dc0506c438a949b2fbb567595688d7fc2fc6fb2ed0a9af60-571x800.jpg</item>
+        <item>https://kprofiles.com/wp-content/uploads/2016/05/41da0e1f89089acda1914063ec04c2f645270db71d5242c13b7d8a6d8b3452f5-571x800.jpg</item>
+    </string-array>
+
+    <!--    name-->
+    <string-array name="name">
+        <item>Park Ji Hyo</item>
+        <item>Im Na Yeon</item>
+        <item>Yoo Jeong Yeon</item>
+        <item>Hirai Momo</item>
+        <item>Minatozaki Sana</item>
+        <item>Myoui Mina</item>
+        <item>Kim Da Hyun</item>
+        <item>Son Chae Young</item>
+        <item>Chou Tzuyu</item>
+    </string-array>
+
+    <!--    kanji/hangul name-->
+    <string-array name="hangul_kanji_name">
+        <item>박지효</item>
+        <item>임나연</item>
+        <item>유정연</item>
+        <item>平井 もも</item>
+        <item>湊崎 紗夏</item>
+        <item>名井 南</item>
+        <item>김다현</item>
+        <item>손채영</item>
+        <item>周子瑜</item>
+    </string-array>
+
+    <!--    stage name-->
+    <string-array name="stage_name">
+        <item>Jihyo</item>
+        <item>Nayeon</item>
+        <item>Jeongyeon</item>
+        <item>Momo</item>
+        <item>Sana</item>
+        <item>Mina</item>
+        <item>Dahyun</item>
+        <item>Chaeyoung</item>
+        <item>Tzuyu</item>
+    </string-array>
+
+    <!--    nationaly -->
+    <string-array name="nationality">
+        <item>Korean</item>
+        <item>Korean</item>
+        <item>Korean</item>
+        <item>Japanese</item>
+        <item>Japanese</item>
+        <item>Japanese</item>
+        <item>Korean</item>
+        <item>Korean</item>
+        <item>Taiwanese</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
+

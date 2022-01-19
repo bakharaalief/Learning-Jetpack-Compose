@@ -3,26 +3,24 @@ package com.bakharaalief.learningcompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -31,30 +29,30 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.skydoves.landscapist.CircularReveal
+import com.skydoves.landscapist.glide.GlideImage
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val listIdol = listOf<Idol>(
-            Idol(R.drawable.dahyun, "Lorem Bla bla bla 1", "wadaw"),
-            Idol(R.drawable.dahyun, "Lorem Bla bla bla 2", "wadaw"),
-            Idol(R.drawable.dahyun, "Lorem Bla bla bla 3", "wadaw"),
-            Idol(R.drawable.dahyun, "Lorem Bla bla bla 4", "wadaw"),
-            Idol(R.drawable.dahyun, "Lorem Bla bla bla 5", "wadaw"),
-        )
+        val listIdol = arrayListOf<Idol>()
+
+        //looping 9 x
+        for (i in 0 until 9){
+            val data = Idol(
+                id = i,
+                photo = resources.getStringArray(R.array.link_photo)[i],
+                stageName = resources.getStringArray(R.array.stage_name)[i],
+            )
+
+            listIdol.add(data)
+        }
 
         //place where view build
         setContent {
-            Scaffold(
-                topBar = {
-                    TopAppBar( backgroundColor = Color.White, title = { Text(text = "Dahyun List")})
-                }
-            ) {
-                //use navigation
-                Navigation(listIdol)
-            }
+            Navigation(listIdol)
         }
     }
 }
@@ -62,48 +60,54 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Navigation(data : List<Idol>){
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "Home_Screen"){
+    NavHost(navController = navController, startDestination = "home"){
 
         //home screen
-        composable(route = "Home_Screen"){
+        composable(route = "home"){
             HomeScreen(datas = data, navController)
         }
 
         //detail screen
         composable(
-            route = "Detail_Screen"
+            route = "detail/{idolId}",
+            arguments = listOf(navArgument("idolId"){ type = NavType.IntType })
         ){
-            DetailScreen()
+            DetailScreen(navController = navController, it.arguments?.getInt("idolId")!!)
         }
     }
 }
 
 @Composable
 fun HomeScreen(datas : List<Idol>, navController: NavController){
-    LazyColumn{
-        items(items = datas){ data ->
-            ImageCard(
-                painter = painterResource(id = data.photo),
-                title = data.title,
-                contentDescription = data.contentDesc,
-                navController = navController
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                backgroundColor = Color.White,
+                title = { Text(text = "Twice") },
             )
+        }
+    ) {
+        LazyColumn{
+            items(items = datas){ data ->
+                ImageCard(
+                    idol = data,
+                    navController = navController
+                )
+            }
         }
     }
 }
 
 @Composable
 fun ImageCard(
-    painter : Painter,
-    title : String,
-    contentDescription : String,
+    idol : Idol,
     navController: NavController
 ){
     Card(
         modifier = Modifier
             .padding(10.dp)
             .clickable {
-                navController.navigate("Detail_Screen")
+                navController.navigate("detail/" + idol.id)
             },
         shape = RoundedCornerShape(10.dp),
         elevation = 10.dp,
@@ -112,13 +116,14 @@ fun ImageCard(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
+                .height(350.dp)
         ) {
             //image
-            Image(
-                painter = painter,
-                contentDescription = contentDescription,
-                contentScale = ContentScale.Crop
+            GlideImage(
+                imageModel = idol.photo,
+                circularReveal = CircularReveal(duration = 250),
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
             )
 
             //box stack 2
@@ -143,7 +148,12 @@ fun ImageCard(
                         .padding(10.dp),
                     contentAlignment = Alignment.BottomCenter
                 ) {
-                    Text(text = title, color = Color.White, fontWeight = FontWeight.Bold)
+                    Text(
+                        text = idol.stageName,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 25.sp
+                    )
                 }
             }
         }
@@ -151,31 +161,72 @@ fun ImageCard(
 }
 
 @Composable
-fun DetailScreen(){
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
+fun DetailScreen(navController: NavController, idIdol : Int){
+
+    //get data
+    val context = LocalContext.current
+
+    //get link photo data
+    val linkPhoto = context.resources.getStringArray(R.array.link_photo)[idIdol]
+    val name = context.resources.getStringArray(R.array.name)[idIdol]
+    val hangulKanjiName = context.resources.getStringArray(R.array.hangul_kanji_name)[idIdol]
+    val stageName = context.resources.getStringArray(R.array.stage_name)[idIdol]
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                backgroundColor = Color.White,
+                title = { Text(text = stageName)},
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
+        }
     ) {
-        //idol image
-        Image(
-            painter = painterResource(id = R.drawable.dahyun),
-            contentDescription = "aaaaaa",
-            contentScale = ContentScale.Crop
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+        ) {
+            //idol image
+            GlideImage(
+                imageModel = linkPhoto,
+                circularReveal = CircularReveal(duration = 250),
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .height(380.dp)
+                    .fillMaxWidth()
+            )
 
-        //idol name
-        Text(
-            modifier = Modifier.padding(10.dp),
-            text = "Dahyun",
-            fontWeight = FontWeight.Bold,
-            fontSize = 25.sp
-        )
+            //idol name
+            Text(
+                modifier = Modifier.fillMaxWidth().padding(10.dp),
+                text = name,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                fontSize = 40.sp
+            )
 
-        //idol desc
-        Text(
-            modifier = Modifier.padding(horizontal = 10.dp),
-            text = "Lorem Ipsum Bla Bla Bla",
-            fontSize = 20.sp
-        )
+            //hangul kanji name
+            Text(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp).padding(bottom = 10.dp),
+                color = Color.Gray,
+                text = hangulKanjiName,
+                textAlign = TextAlign.Center,
+                fontSize = 20.sp
+            )
+
+            //idol desc
+            Text(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp).padding(bottom = 10.dp),
+                text = stringResource(id = R.string.idol_content),
+                textAlign = TextAlign.Center,
+                fontSize = 18.sp
+            )
+        }
     }
 }
